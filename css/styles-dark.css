@@ -1,0 +1,35 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #121212;
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* disable any outline on basic form elements */
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}
+
+#myInput,
+#myButton {
+    margin: 8px 5px;
+    background-color: #3b3b3b;
+    color: #fff;
+    border-color: #515151
+}
+
+#myInput {
+    width: 250px;
+}
+
+#myButton {
+    width: 70px;
+}

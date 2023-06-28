@@ -4,6 +4,12 @@
     box-sizing: border-box;
 }
 
+body {
+    background-color: #fff;
+    color: #000;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
 /* disable any outline on basic form elements */
 input:focus,
 select:focus,
@@ -12,18 +18,18 @@ button:focus {
     outline: none;
 }
 
+#myInput,
+#myButton {
+    margin: 8px 5px;
+    background-color: #f8f8ff;
+    color: #000;
+    border-color: #dcdcdc;
+}
+
 #myInput {
     width: 250px;
-    margin: 8px 5px;
-    background-color: #3b3b3b;
-    color: #fff;
-    border-color: #515151
 }
 
 #myButton {
     width: 70px;
-    margin: 8px 5px;
-    background-color: #3b3b3b;
-    color: #fff;
-    border-color: #515151
 }
