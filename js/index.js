@@ -17,25 +17,22 @@ class SieveOfEratosthenes {
         this.matrix = matrix;
         this.max = max;
 
+        // set the outline context
         this.outlineContext = this.#getContext("#444", true);
-
-        // get and set the width and height of the screen
-        var screenWidth = window.innerWidth;
-        var maxContainerWidth = screenWidth - 50;
-        this.outlineContext.canvas.width = Math.min(screenWidth, maxContainerWidth);
-        
-        var screenHeight = window.innerHeight;
-        var maxContainerHeight = screenHeight - 50;
-        this.outlineContext.canvas.height = Math.min(screenHeight, maxContainerHeight);
         
         // maximum cell size
         var maxCellSize = 50;
         
         // set the cell size
-        this.cellSize = Math.floor(this.outlineContext.canvas.width / (matrix.length + 1));
-        this.cellSize= Math.min(this.cellSize, maxCellSize);
+        this.cellSize = Math.floor(window.innerWidth / (matrix.length + 1));
+        this.cellSize = Math.min(this.cellSize, maxCellSize);
+
         //this.padding = size / 10;
         this.padding = Math.floor(this.cellSize / 10);
+
+        // adjust the canvas size to fit the grid
+        this.outlineContext.canvas.width = (this.cellSize + this.padding) * matrix[0].length + this.padding;
+        this.outlineContext.canvas.height = (this.cellSize + this.padding) * matrix.length + this.padding;
 
         this.primes = matrix.map(row => row.slice());
     }
@@ -139,12 +136,6 @@ class SieveOfEratosthenes {
     async render() {
         // set the running flag to true
         SieveOfEratosthenes.isRunning = true;
-        
-        // get the center of the canvas
-        const center = this.#getCenter(this.outlineContext.canvas.width, this.outlineContext.canvas.height);
-        this.outlineContext.canvas.style.marginLeft = center.x;
-        this.outlineContext.canvas.style.marginTop = center.y;
-
         
         // set the font size and padding
         let fontSize = Math.ceil(this.cellSize / 2);
@@ -259,53 +250,66 @@ function createMatrix(number) {
 // input element
 const inputElement = document.getElementById('myInput');
 
+const inputButton = document.getElementById('myButton');
+
 // initialize the grid system
 let gridSystem = new SieveOfEratosthenes(createMatrix(100), 100);
+
+function checkInput(userInput) {
+    // Cancel the default action, if needed
+    if(gridSystem.checkIfRunning()) {
+        alert('Already running, please wait!');
+        return;
+    } else {
+        // grab the input value
+        const inputValue = inputElement.value;
+        // check if the input value is valid
+        if (inputValue == '') {
+            alert('Please enter a number!');
+            return;
+        }
+        else if (inputValue < 2) {
+            alert('Please enter a number greater than 1!');
+            return;
+        }
+        else if (inputValue > 5000) {
+            alert('Please enter a number less than 5000!');
+            return;
+        }
+        else if (inputValue % 1 != 0) {
+            alert('Please enter a whole number!');
+            return;
+        }
+        
+        let CAP = inputValue;
+
+        // Create a matrix of numbers
+        let matrix = createMatrix(CAP);
+
+        // Calculate the size of the cell
+
+        // clean the canvas
+        gridSystem.clean();
+
+        // create a new grid system
+        gridSystem = new SieveOfEratosthenes(matrix, CAP);
+
+        // render the grid system
+        gridSystem.render();
+    }
+}
 
 // Add an event listener to the input element
 inputElement.addEventListener('keydown', function(event) {
     // Press the enter key
     if (event.key === 'Enter') {
-        // Cancel the default action, if needed
-        if(gridSystem.checkIfRunning()) {
-            alert('Already running, please wait!');
-            return;
-        } else {
-            // grab the input value
-            const inputValue = inputElement.value;
-            // check if the input value is valid
-            if (inputValue == '') {
-                alert('Please enter a number!');
-                return;
-            }
-            else if (inputValue < 2) {
-                alert('Please enter a number greater than 1!');
-                return;
-            }
-            else if (inputValue > 5000) {
-                alert('Please enter a number less than 5000!');
-                return;
-            }
-            else if (inputValue % 1 != 0) {
-                alert('Please enter a whole number!');
-                return;
-            }
-            
-            let CAP = inputValue;
+        checkInput(inputElement);
+    }
+});
 
-            // Create a matrix of numbers
-            let matrix = createMatrix(CAP);
-
-            // Calculate the size of the cell
-
-            // clean the canvas
-            gridSystem.clean();
-
-            // create a new grid system
-            gridSystem = new SieveOfEratosthenes(matrix, CAP);
-
-            // render the grid system
-            gridSystem.render();
-        }
+// Add an event listener to the button
+inputButton.addEventListener('click', function(event) {
+    if (event.type === 'click') {
+        checkInput(inputButton);
     }
 });
